@@ -1,0 +1,76 @@
+name: Build & Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: windows-latest
+            triple: x86_64-pc-windows-msvc
+            args: ""
+          - platform: ubuntu-22.04
+            triple: x86_64-unknown-linux-gnu
+            args: ""
+          - platform: macos-latest
+            triple: aarch64-apple-darwin
+            args: --target aarch64-apple-darwin
+
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.triple }}
+
+      - name: Linux dependencies
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libayatana-appindicator3-dev
+
+      - name: Install frontend deps
+        run: npm ci
+
+      - name: Fetch FFmpeg sidecars
+        env:
+          TARGET_TRIPLE: ${{ matrix.triple }}
+        run: node scripts/ci-fetch-ffmpeg.mjs
+
+      - name: Build Tauri app
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: v__VERSION__
+          releaseName: "Felty's Movie Maker 2026 v__VERSION__"
+          releaseBody: |
+            Cross-platform builds for **Windows**, **macOS (Apple Silicon)**, and **Linux**.
+
+            Bundled with FFmpeg / ffprobe sidecars.
+          releaseDraft: false
+          prerelease: false
+          args: ${{ matrix.args }}

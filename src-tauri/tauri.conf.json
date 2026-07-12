@@ -30,7 +30,7 @@
   },
   "bundle": {
     "active": true,
-    "targets": "all",
+    "targets": ["msi", "app", "dmg", "deb", "rpm", "appimage"],
     "externalBin": [
       "binaries/ffmpeg",
       "binaries/ffprobe"

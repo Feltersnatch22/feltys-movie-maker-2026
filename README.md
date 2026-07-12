@@ -1,6 +1,14 @@
-# Felty's Movie Maker 2026
+<p align="center">
+  <img src="public/applogo.png" alt="Felty's Movie Maker 2026" width="160" />
+</p>
 
-Cross-platform desktop video editor built with **Tauri 2**, **React**, **Rust**, and a bundled **FFmpeg** sidecar. Opens Windows Movie Maker `.wlmp` projects, edits on a timeline, previews frames, and exports H.264/AAC MP4.
+<h1 align="center">Felty's Movie Maker 2026</h1>
+
+<p align="center">
+  Cross-platform desktop video editor built with <strong>Tauri 2</strong>, <strong>React</strong>, <strong>Rust</strong>, and a bundled <strong>FFmpeg</strong> sidecar.
+</p>
+
+Opens Windows Movie Maker `.wlmp` projects, edits on a timeline, previews frames, and exports H.264/AAC MP4.
 
 ## Prerequisites
 
@@ -46,4 +54,4 @@ npm run tauri build
 - **GIF / meme maker** — captioned looping GIFs from imported video or timeline clips
 - Export up to **4K UHD** and **high frame rates** (24 / 30 / 60 / 120, or match source)
 - H.264 High profile with resolution-aware bitrate and levels
-- Light / dark Fluent-inspired UI (Outfit + Manrope/Satoshi)
+- Light / dark Fluent-inspired UI (Urbanist + Satoshi)
